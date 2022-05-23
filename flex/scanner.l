@@ -6,8 +6,11 @@ Autor: mlemosf
 */
 %{
 #include <stdio.h>
+#include "../bison/parser.tab.h"
 	extern int yylex();
 	int linenum = 0;
+	int yywrap();
+	extern FILE *yyin;
 %}
 
 /* Estruturas */
@@ -42,9 +45,4 @@ OPERATOR [+|-|\*|\\]
 
 %%
 
-int main(int argc, char** argv) {
-	while(1) {
-		yylex();
-	}
-	return 0;
-}
+int yywrap() {}
