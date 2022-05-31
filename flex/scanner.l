@@ -15,24 +15,24 @@ Autor: mlemosf
 
 /* Estruturas */
 DIGIT [0-9]
-INT [-]*{DIGIT}*
-REAL [-]*{DIGIT}*"."{DIGIT}*
+INT [-]*{DIGIT}+
+REAL [-]*{DIGIT}+"."{DIGIT}+
 BOOL "t"|"nil"
 ID [a-zA-Z]+[a-zA-Z0-9]*
 STRING "'"[a-zA-Z]*"'"
-BRANCO [ \t\r]
+BRANCO [ \t]
 COMMENT ;.*
 
 /* Palavras chave */
 DEFINE "define"
 SET "set"
-OPERATOR [+|-|\*|\\]
+OPERATOR [\+|\-|\*|\\]
 
 /* Regras */
 %%
 
-{BRANCO} {printf(" ");}
-{INT} {printf("<int>");}
+{BRANCO}+ {;}
+{INT} {yylval.ival = atoi(yytext); return INT;}
 {REAL} {printf("<real>");}
 {BOOL} {printf("<bool>");}
 {ID} {printf("<id>");}

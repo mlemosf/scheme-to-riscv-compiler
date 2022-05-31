@@ -6,28 +6,75 @@ Autor: mlemosf
 */
 
 %{
-	#include <stdio.h>
-	#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+/* Globals */
 
-	extern int yylex();
-	extern int yyparse();
-	extern FILE *yyin;
-	extern FILE *yyout;
+#define TRUE 1
+#define FALSE 0
+#define YYDEBUG 1
 
-	void yyerror(char* s);
+extern int yylex();
+extern int yyparse();
+extern FILE *yyin;
+extern FILE *yyout;
+
+void yyerror(char* s);
+
 %}
+
+/* Tipos */
+%union {
+	int ival;
+	char* sval;
+}
+
+/* Tokens */
+%token <ival> INT
+%token <sval> ID
+
+// Expressões tipadas
+%type <ival> int
+
 
 /* Regras */
 %%
 
-program: 
-{;}
+program: form_list 
+{printf("PROGRAM IS OK\n");}
+;
+
+form_list: %empty
+| form form_list 
+;
+
+form: expression {;}
+;
+
+expression: constant {;}
+;
+
+definition_list: %empty 
+| definition definition_list {;}
+;
+
+definition: "(define" variable expression ")" {;}
+;
+
+variable: ID {;}
+;
+
+constant: int {;}
+;
+
+int: INT {$$ = $1; printf("<int>");}
 ;
 
 %%
 
 int main(int argc, char** argv) {
-	
+	yydebug = FALSE;
+
 	// Se for passado um arquivo de input, busca o programa do arquivo
 	if (argc > 1) {
 		char* filename = argv[1];
@@ -47,6 +94,8 @@ int main(int argc, char** argv) {
 
 	/* Fecha o arquivo de input */
 	fclose(yyin);
+	fclose(yyout);
+
 	return 0;
 }
 

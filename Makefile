@@ -2,6 +2,8 @@
 #OBJS = build/tabelaSimbolos.o
 # OBJS = ""
 
+TARGET: compilador 
+
 bison/parser.tab.c bison/parser.tab.h: bison/parser.y
 	bison -o bison/parser.tab.c -d bison/parser.y
 
@@ -14,7 +16,6 @@ flex/lex.yy.c: bison/parser.tab.h
 compilador: flex/lex.yy.c bison/parser.tab.c
 	gcc -o compilador flex/lex.yy.c bison/parser.tab.c -lfl
 
-all: compilador 
 
 clean:
 #	rm -f lex.yy.c parser.tab.c parser.tab.h parser.output compilador
