@@ -8,10 +8,10 @@ Autor: mlemosf
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/globals.h"
+#include "../include/symtab.h"
 /* Globals */
 
-#define TRUE 1
-#define FALSE 0
 #define YYDEBUG 1
 
 extern int yylex();
