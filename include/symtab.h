@@ -14,10 +14,10 @@ typedef struct Symbol {
 } Symbol;
 
 //void createSymtab(Symbol* symtab);
-void destructSymbtab(Symbol** symtab);
+void destructSymtab(Symbol** symtab);
 void insertSymtab(Symbol** symtab, char* id, int type);
 int searchSymtab(Symbol* symtab, char* id);
 void markSymbolUsed(Symbol** symtab, char* id);
-void printSmtab(Symbol* symtab);
+void printSymtab(Symbol* symtab);
 
 #endif

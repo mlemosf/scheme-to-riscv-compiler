@@ -1,5 +1,5 @@
 # Makefile para o analisador léxico/* Functions */
-OBJS = build/symtab.o
+OBJS = build/symtab.o build/codegen.o
 # OBJS = ""
 
 TARGET: compilador 
@@ -12,6 +12,10 @@ flex/lex.yy.c: bison/parser.tab.h
 
 build/symtab.o: src/symtab.c include/symtab.h
 	gcc -o build/symtab.o -c src/symtab.c
+
+build/codegen.o: src/codegen.c include/codegen.h
+	gcc -o build/codegen.o -c src/codegen.c
+
 
 compilador: flex/lex.yy.c bison/parser.tab.c ${OBJS}
 	gcc -o compilador flex/lex.yy.c bison/parser.tab.c ${OBJS} -lfl

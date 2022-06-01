@@ -28,7 +28,7 @@ int searchSymtab(Symbol* symtab, char* id) {
 	int position = -1;
 	int counter = 0;
 
-	while (current->next != NULL) {
+	while (current != NULL) {
 		if (!strcmp(id, current->id)) {
 			position = counter;
 			break;
@@ -42,7 +42,7 @@ int searchSymtab(Symbol* symtab, char* id) {
 void printSymtab(Symbol* symtab) {
 	Symbol* current = symtab;
 	while (current != NULL) {
-		printf("%s\n", current->id);
+		printf("| %s | %d | %d \n", current->id, current->type, current->wasUsed);
 		current = current->next;
 	}	
 }

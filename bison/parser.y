@@ -10,16 +10,20 @@ Autor: mlemosf
 #include <stdlib.h>
 #include "../include/globals.h"
 #include "../include/symtab.h"
-/* Globals */
+#include "../include/codegen.h"
 
-#define YYDEBUG 1
+#define YYDEBUG FALSE
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 extern FILE *yyout;
+int yydebug = YYDEBUG;
 
 void yyerror(char* s);
+
+/* Tabela de símbolos */
+Symbol* symtab = NULL;
 
 %}
 
@@ -27,38 +31,55 @@ void yyerror(char* s);
 %union {
 	int ival;
 	char* sval;
+	void* vval;
 }
 
 /* Tokens */
 %token <ival> INT
 %token <sval> ID
+%token <vval> DEFINE OPEN CLOSE
 
 // Expressões tipadas
 %type <ival> int
+%type <sval> variable
 
 
 /* Regras */
 %%
 
-program: form_list 
-{printf("PROGRAM IS OK\n");}
+program: form 
+{
+	if (YYDEBUG) printf("PROGRAM IS OK\n");}
 ;
 
-form_list: %empty
-| form form_list 
+form: %empty
+| expression form
+{;}
 ;
 
-form: expression {;}
+expression: constant
+| definition {;}
 ;
 
-expression: constant {;}
-;
 
-definition_list: %empty 
-| definition definition_list {;}
-;
+definition: OPEN DEFINE variable int CLOSE {
+	int position;
+	int address;
 
-definition: "(define" variable expression ")" {;}
+	// Insere elemento na tabela de símbolos
+	insertSymtab(&symtab, (char*)$3, T_INT);
+
+	// Gera o código de atribuição de variável (carregamento de inteiro em memória)
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+	address = word_offset * position;
+	storeInt(yyout, $4, address);
+
+
+
+}
 ;
 
 variable: ID {;}
@@ -67,13 +88,13 @@ variable: ID {;}
 constant: int {;}
 ;
 
-int: INT {$$ = $1; printf("<int>");}
+int: INT {$$ = $1;}
 ;
 
 %%
 
 int main(int argc, char** argv) {
-	yydebug = FALSE;
+	//yydebug = 0;
 
 	// Se for passado um arquivo de input, busca o programa do arquivo
 	if (argc > 1) {
@@ -89,12 +110,18 @@ int main(int argc, char** argv) {
 
 	yyout = stdout;
 
+	// Escreve o header do arquivo ASM
+	writeHeader(yyout);
+
 	/* Faz o parse do arquivo */
 	yyparse();
 
 	/* Fecha o arquivo de input */
 	fclose(yyin);
 	fclose(yyout);
+
+	/* Destroi a tabela de símbolos */
+	destructSymtab(&symtab);
 
 	return 0;
 }

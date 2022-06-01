@@ -24,18 +24,21 @@ BRANCO [ \t]
 COMMENT ;.*
 
 /* Palavras chave */
-DEFINE "define"
 SET "set"
 OPERATOR [\+|\-|\*|\\]
 
 /* Regras */
 %%
 
+define {return DEFINE;}
+\( {return OPEN;}
+\) {return CLOSE;}
+
 {BRANCO}+ {;}
 {INT} {yylval.ival = atoi(yytext); return INT;}
 {REAL} {printf("<real>");}
 {BOOL} {printf("<bool>");}
-{ID} {printf("<id>");}
+{ID} {yylval.sval = (char*)strdup(yytext); return ID;}
 
 {STRING} {printf("<string>");}
 {OPERATOR} {printf("<operator>");}
