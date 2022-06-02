@@ -31,6 +31,7 @@ OPERATOR [\+|\-|\*|\\]
 %%
 
 define {return DEFINE;}
+display {return DISPLAY;}
 \( {return OPEN;}
 \) {return CLOSE;}
 

@@ -12,5 +12,6 @@ void writeLabel(FILE* stream, char* label); // Escreve label para procedimentos
 /* Escrita de expressões RISC-V */
 void writeHeader(FILE* stream);
 void storeInt(FILE* stream, int value, int position);
+void printInt(FILE* stream, int value);
 
 #endif

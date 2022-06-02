@@ -12,6 +12,7 @@ void writeLabel(FILE* stream, char* exp) {
 void writeHeader(FILE* stream) {
 	writeLabel(stream, ".text\n");
 }
+
 void storeInt(FILE* stream, int value, int position) {
 	char exp[20];
 	sprintf(exp, "li, %s, %d", t3, value);
@@ -19,6 +20,14 @@ void storeInt(FILE* stream, int value, int position) {
 
 	sprintf(exp, "sw, %s, %d(%s)", t3, position, gp);
 	writeExp(stream, exp);
-
-	
 }
+
+void printInt(FILE* stream, int value) {
+	char exp[20];
+	sprintf(exp, "li a0, %d", value);
+	writeExp(stream, "li, a7, 1");
+	writeExp(stream, exp);
+	writeExp(stream, "ecall");
+}
+
+

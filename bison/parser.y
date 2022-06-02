@@ -37,7 +37,7 @@ Symbol* symtab = NULL;
 /* Tokens */
 %token <ival> INT
 %token <sval> ID
-%token <vval> DEFINE OPEN CLOSE
+%token <vval> DEFINE DISPLAY OPEN CLOSE 
 
 // Expressões tipadas
 %type <ival> int
@@ -58,7 +58,8 @@ form: %empty
 ;
 
 expression: constant
-| definition {;}
+| definition
+| display {;}
 ;
 
 
@@ -76,11 +77,12 @@ definition: OPEN DEFINE variable int CLOSE {
 	}
 	address = word_offset * position;
 	storeInt(yyout, $4, address);
-
-
-
 }
 ;
+
+display: OPEN DISPLAY int CLOSE {
+	printInt(yyout, $3);
+}
 
 variable: ID {;}
 ;
