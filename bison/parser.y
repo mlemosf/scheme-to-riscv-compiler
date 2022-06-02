@@ -83,6 +83,25 @@ definition: OPEN DEFINE variable int CLOSE {
 display: OPEN DISPLAY int CLOSE {
 	printInt(yyout, $3);
 }
+| OPEN DISPLAY variable CLOSE {
+	// Busca a variável na tabela de símbolos
+	int position = searchSymtab(symtab, (char*) $3);
+	int address;
+
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+
+	// Se o símbolo existir, pega esse símbolo
+	Symbol* symbol = getSymbolById(symtab, (char*)$3);
+	if (symbol == NULL) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+
+	address = word_offset * position;
+	printVariable(yyout, symbol->type, address);
+	// TODO: adicionar flag de variável usada
+ }
 
 variable: ID {;}
 ;

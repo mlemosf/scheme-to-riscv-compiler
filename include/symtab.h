@@ -19,5 +19,6 @@ void insertSymtab(Symbol** symtab, char* id, int type);
 int searchSymtab(Symbol* symtab, char* id);
 void markSymbolUsed(Symbol** symtab, char* id);
 void printSymtab(Symbol* symtab);
+Symbol* getSymbolById(Symbol* symtab, char* id);
 
 #endif

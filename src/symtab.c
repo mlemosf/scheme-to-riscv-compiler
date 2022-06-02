@@ -39,6 +39,22 @@ int searchSymtab(Symbol* symtab, char* id) {
 	return position;
 }
 
+Symbol* getSymbolById(Symbol* symtab, char* id) {
+	Symbol* current = symtab;
+	Symbol* found = NULL;
+	int counter = 0;
+
+	while (current != NULL) {
+		if (!strcmp(id, current->id)) {
+			found = current;
+			break;
+		}
+		current = current->next;
+		counter++;
+	}
+	return found;
+}
+
 void printSymtab(Symbol* symtab) {
 	Symbol* current = symtab;
 	while (current != NULL) {

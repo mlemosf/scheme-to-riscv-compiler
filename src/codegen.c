@@ -15,19 +15,38 @@ void writeHeader(FILE* stream) {
 
 void storeInt(FILE* stream, int value, int position) {
 	char exp[20];
-	sprintf(exp, "li, %s, %d", t3, value);
+	sprintf(exp, "li %s, %d", t3, value);
 	writeExp(stream, exp);
 
-	sprintf(exp, "sw, %s, %d(%s)", t3, position, gp);
+	sprintf(exp, "sw %s, %d(%s)", t3, position, gp);
+	writeExp(stream, exp);
+}
+
+void loadInt(FILE* stream, int position) {
+	char exp[20];
+	sprintf(exp, "lw %s, %d(%s)", t3, position, gp);
 	writeExp(stream, exp);
 }
 
 void printInt(FILE* stream, int value) {
 	char exp[20];
 	sprintf(exp, "li a0, %d", value);
-	writeExp(stream, "li, a7, 1");
+	writeExp(stream, "li a7, 1");
 	writeExp(stream, exp);
 	writeExp(stream, "ecall");
 }
 
+/* Funções complexas */
+void printVariable(FILE* stream, int type, int address) {
+	char exp[50];
+
+	switch(type) {
+	case T_INT:
+		sprintf(exp, "lw a0, %d(%s)", address, gp);
+		writeExp(stream, "li, a7, 1");
+		writeExp(stream, exp);
+		break;
+	}
+	writeExp(stream, "ecall");
+}
 
