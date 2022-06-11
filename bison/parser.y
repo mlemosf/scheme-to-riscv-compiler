@@ -30,6 +30,7 @@ Symbol* symtab = NULL;
 /* Tipos */
 %union {
 	int ival;
+	char cval;
 	char* sval;
 	void* vval;
 }
@@ -37,12 +38,12 @@ Symbol* symtab = NULL;
 /* Tokens */
 %token <ival> INT
 %token <sval> ID
+%token <cval> OPERATOR
 %token <vval> DEFINE DISPLAY OPEN CLOSE 
 
 // Expressões tipadas
 %type <ival> int
-%type <sval> variable
-
+%type <sval> variable operation
 
 /* Regras */
 %%
@@ -58,6 +59,7 @@ form: %empty
 ;
 
 expression: constant
+| operation
 | definition
 | display {;}
 ;
@@ -77,6 +79,27 @@ definition: OPEN DEFINE variable int CLOSE {
 	}
 	address = word_offset * position;
 	storeInt(yyout, $4, address);
+}
+| OPEN DEFINE variable operation CLOSE {
+	int position;
+	int address;
+
+	// Insere elemento na tabela de símbolos
+	insertSymtab(&symtab, (char*)$3, T_INT);
+
+	// Gera o código de atribuição de variável (carregamento de inteiro em memória)
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+	address = word_offset * position;
+	storeVariable(yyout, address);
+}
+;
+
+operation: OPEN OPERATOR int int CLOSE {
+	// Verifica o operador e gera o código correspondente
+	intArithmeticOperation(yyout, $2, $3, $4);
 }
 ;
 
@@ -101,7 +124,8 @@ display: OPEN DISPLAY int CLOSE {
 	address = word_offset * position;
 	printVariable(yyout, symbol->type, address);
 	// TODO: adicionar flag de variável usada
- }
+}
+;
 
 variable: ID {;}
 ;

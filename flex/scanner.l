@@ -42,7 +42,7 @@ display {return DISPLAY;}
 {ID} {yylval.sval = (char*)strdup(yytext); return ID;}
 
 {STRING} {printf("<string>");}
-{OPERATOR} {printf("<operator>");}
+{OPERATOR} {yylval.cval = (char)yytext[0]; return OPERATOR;}
 {COMMENT} {printf("<comment>");}
 
 \n { linenum++; printf("\n");}

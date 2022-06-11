@@ -20,8 +20,10 @@ void writeHeader(FILE* stream);
 void storeInt(FILE* stream, int value, int position);
 void loadInt(FILE* stream, int position);
 void printInt(FILE* stream, int value);
+void storeVariable(FILE* stream, int address);
 
 /* Funçoes compostas */
 void printVariable(FILE* stream, int type, int address);
+void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
 
 #endif

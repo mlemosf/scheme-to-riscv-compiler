@@ -36,6 +36,12 @@ void printInt(FILE* stream, int value) {
 	writeExp(stream, "ecall");
 }
 
+void storeVariable(FILE* stream, int address) {
+	char exp[20];
+	sprintf(exp, "sw %s, %d(%s)", t3, address, gp);
+	writeExp(stream, exp);
+}
+
 /* Funções complexas */
 void printVariable(FILE* stream, int type, int address) {
 	char exp[50];
@@ -48,5 +54,20 @@ void printVariable(FILE* stream, int type, int address) {
 		break;
 	}
 	writeExp(stream, "ecall");
+}
+
+void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2) {
+	char exp[20];
+
+	// Verifica o operador e gera o código correspondente
+	switch(operator) {
+	case '+':
+		sprintf(exp, "li %s, %d", t3, arg1);
+		writeExp(stream, exp);
+
+		sprintf(exp, "addi %s, %s, %d", t3, t3, arg2);
+		writeExp(stream, exp);
+		break;
+	}
 }
 
