@@ -25,7 +25,7 @@ COMMENT ;.*
 
 /* Palavras chave */
 SET "set"
-OPERATOR [\+|\-|\*|\\]
+OPERATOR [\+|\-|\*|\/]
 
 /* Regras */
 %%

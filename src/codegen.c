@@ -59,13 +59,40 @@ void printVariable(FILE* stream, int type, int address) {
 void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2) {
 	char exp[20];
 
-	// Verifica o operador e gera o código correspondente
+		// Verifica o operador e gera o código correspondente
 	switch(operator) {
 	case '+':
 		sprintf(exp, "li %s, %d", t3, arg1);
 		writeExp(stream, exp);
 
 		sprintf(exp, "addi %s, %s, %d", t3, t3, arg2);
+		writeExp(stream, exp);
+		break;
+	case '-':
+		sprintf(exp, "li %s, %d", t3, arg1);
+		writeExp(stream, exp);
+		
+		sprintf(exp, "addi %s, %s, %d", t3, t3, (-1) * arg2);
+		writeExp(stream, exp);
+		break;
+	case '*':
+		sprintf(exp, "li %s, %d", t3, arg1);
+		writeExp(stream, exp);
+
+		sprintf(exp, "li %s, %d", t4, arg2);
+		writeExp(stream, exp);
+
+		sprintf(exp, "mul %s, %s, %s", t3, t3, t4);
+		writeExp(stream, exp);
+		break;
+	case '/':
+		sprintf(exp, "li %s, %d", t3, arg1);
+		writeExp(stream, exp);
+
+		sprintf(exp, "li %s, %d", t4, arg2);
+		writeExp(stream, exp);
+
+		sprintf(exp, "div %s, %s, %s", t3, t3, t4);
 		writeExp(stream, exp);
 		break;
 	}
