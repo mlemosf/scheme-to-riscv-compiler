@@ -101,6 +101,21 @@ operation: OPEN OPERATOR int int CLOSE {
 	// Verifica o operador e gera o código correspondente
 	intArithmeticOperation(yyout, $2, $3, $4);
 }
+| OPEN OPERATOR variable int CLOSE {
+	int position, address;
+
+	// Busca a primeira variável
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+
+	address = word_offset * position;
+	loadInt(yyout, address);
+
+	// Realiza a operação
+	intVariableArithmeticOperation(yyout, $2, address ,$4);
+}
 ;
 
 display: OPEN DISPLAY int CLOSE {

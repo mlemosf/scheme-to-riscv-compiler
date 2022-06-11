@@ -45,7 +45,7 @@ display {return DISPLAY;}
 {OPERATOR} {yylval.cval = (char)yytext[0]; return OPERATOR;}
 {COMMENT} {printf("<comment>");}
 
-\n { linenum++; printf("\n");}
+\n { linenum++; }
 
 %%
 

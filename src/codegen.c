@@ -98,3 +98,25 @@ void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2) {
 	}
 }
 
+
+void intVariableArithmeticOperation(FILE *stream, char operator, int arg1, int arg2) {
+	char exp[20];
+
+	// Carrega valor da variável em registrador
+	sprintf(exp, "lw %s, %d(%s)", t3, arg1, gp);
+	writeExp(stream, exp);
+
+	// Coloca o valor constante em um registrador
+	sprintf(exp, "li %s, %d", t4, arg2);
+	writeExp(stream, exp);
+
+	// Realiza a operação
+	switch(operator) {
+	case '+':
+		sprintf(exp, "add %s, %s, %s", t3, t3, t4);
+		writeExp(stream, exp);
+	}
+
+
+	
+}
