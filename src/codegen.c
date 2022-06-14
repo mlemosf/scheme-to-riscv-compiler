@@ -147,5 +147,20 @@ void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, 
 	case '+':
 		sprintf(exp, "add %s, %s, %s", t3, t3, t4);
 		writeExp(stream, exp);
+		break;
+	case '-':
+		sprintf(exp, "sub %s, %s, %s", t3, t3, t4);
+		writeExp(stream, exp);
+		break;
+	case '*':
+		sprintf(exp, "mul %s, %s, %s", t3, t3, t4);
+		writeExp(stream, exp);
+		break;
+	case '/':
+		sprintf(exp, "div %s, %s, %s", t3, t3, t4);
+		writeExp(stream, exp);
+		break;
+	break;
+
 	}
 }
