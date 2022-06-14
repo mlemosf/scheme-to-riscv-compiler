@@ -25,5 +25,7 @@ void storeVariable(FILE* stream, int address);
 /* Funçoes compostas */
 void printVariable(FILE* stream, int type, int address);
 void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
+void intVariableArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
+void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
 
 #endif

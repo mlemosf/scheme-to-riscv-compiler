@@ -116,6 +116,30 @@ operation: OPEN OPERATOR int int CLOSE {
 	// Realiza a operação
 	intVariableArithmeticOperation(yyout, $2, address ,$4);
 }
+| OPEN OPERATOR variable variable CLOSE {
+	int position, address1, address2;
+
+	// Busca a primeira variável
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+
+	address1 = word_offset * position;
+	loadInt(yyout, address1);
+
+	// Busca a segunda variável
+	position = searchSymtab(symtab, (char*)$4);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+
+	address2 = word_offset * position;
+	loadInt(yyout, address2);
+
+	// Realiza a operação
+	variableVariableArithmeticOperation(yyout, $2, address1, address2);
+}
 ;
 
 display: OPEN DISPLAY int CLOSE {
@@ -187,7 +211,7 @@ int main(int argc, char** argv) {
 }
 
 void yyerror(char* s) {
-	printf("Erro: %s\n", s);
+	printf("%s\n", s);
 	exit(-1);
 }
 
