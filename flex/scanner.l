@@ -26,12 +26,14 @@ COMMENT ;.*
 /* Palavras chave */
 SET "set"
 OPERATOR [\+|\-|\*|\/]
+COMPARISON [>|<|>=|<=]
 
 /* Regras */
 %%
 
 define {return DEFINE;}
 display {return DISPLAY;}
+while {return WHILE;}
 \( {return OPEN;}
 \) {return CLOSE;}
 
@@ -43,6 +45,7 @@ display {return DISPLAY;}
 
 {STRING} {printf("<string>");}
 {OPERATOR} {yylval.cval = (char)yytext[0]; return OPERATOR;}
+{COMPARISON} {yylval.sval = (char*)strdup(yytext); return COMPARISON;}
 {COMMENT} {printf("<comment>");}
 
 \n { linenum++; }

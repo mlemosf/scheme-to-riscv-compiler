@@ -20,6 +20,7 @@ void writeHeader(FILE* stream);
 void storeInt(FILE* stream, int value, int position);
 void loadInt(FILE* stream, int position);
 void printInt(FILE* stream, int value);
+void printChar(FILE* stream, char value);
 void storeVariable(FILE* stream, int address);
 
 /* Funçoes compostas */
@@ -28,4 +29,9 @@ void intArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
 void intVariableArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
 void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, int arg2);
 
+/* Loops */
+//void writeWhileHeader(FILE* stream, int counter);
+void writeWhileHeader(FILE* stream, int counter, int cmp1, int cmp2);
+void writeWhileCondition(FILE* stream, char* operator, int address, int value, char* label);
+void writeWhileFooter(FILE* stream, int counter);
 #endif

@@ -6,11 +6,11 @@ void writeExp(FILE* stream, char* exp) {
 }
 
 void writeLabel(FILE* stream, char* exp) {
-	fprintf(stream, "%s", exp);
+	fprintf(stream, "%s:\n", exp);
 }
 
 void writeHeader(FILE* stream) {
-	writeLabel(stream, ".text\n");
+	fprintf(stream, ".text\n");
 }
 
 void storeInt(FILE* stream, int value, int position) {
@@ -163,4 +163,38 @@ void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, 
 	break;
 
 	}
+}
+
+/* === Loops === */
+void writeWhileHeader(FILE* stream, int counter, int cmp1, int cmp2) {
+	char exp[20];
+
+	// Define o registradores de comparação
+	sprintf(exp, "lw %s, %d(%s)", t3, cmp1, gp);
+	writeExp(stream, exp);
+
+	sprintf(exp, "li, %s, %d", t2, cmp2);
+	writeExp(stream, exp);
+
+	sprintf(exp, "loop_%d", counter);
+	writeLabel(stream, exp);
+}
+
+void writeWhileCondition(FILE* stream, char* operator, int address, int value, char* label) {
+	char exp[20];
+	if (!strcmp(operator, "<")) {
+		sprintf(exp, "bge %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
+}
+
+void writeWhileFooter(FILE* stream, int counter) {
+	char exp[20];
+
+	// Adiciona loop incondicional para o loop;
+	sprintf(exp, "jal %s, loop_%d", x0, counter);
+	writeExp(stream, exp);
+
+	sprintf(exp, "endloop_%d", counter);
+	writeLabel(stream, exp);
 }

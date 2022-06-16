@@ -12,13 +12,14 @@ Autor: mlemosf
 #include "../include/symtab.h"
 #include "../include/codegen.h"
 
-#define YYDEBUG FALSE
+#define YYDEBUG FALSE 
 
 extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 extern FILE *yyout;
 int yydebug = YYDEBUG;
+int loopCounter = 0;
 
 void yyerror(char* s);
 
@@ -37,9 +38,9 @@ Symbol* symtab = NULL;
 
 /* Tokens */
 %token <ival> INT
-%token <sval> ID
+%token <sval> ID COMPARISON
 %token <cval> OPERATOR
-%token <vval> DEFINE DISPLAY OPEN CLOSE 
+%token <vval> DEFINE DISPLAY OPEN CLOSE WHILE 
 
 // Expressões tipadas
 %type <ival> int
@@ -61,7 +62,8 @@ form: %empty
 expression: constant
 | operation
 | definition
-| display {;}
+| display
+| loop {;}
 ;
 
 
@@ -163,6 +165,31 @@ display: OPEN DISPLAY int CLOSE {
 	address = word_offset * position;
 	printVariable(yyout, symbol->type, address);
 	// TODO: adicionar flag de variável usada
+}
+;
+
+// Estruturas de repetição
+loop: OPEN WHILE OPEN COMPARISON variable int CLOSE {
+	int position, address;
+
+	// Carrega a variável da memória
+	position = searchSymtab(symtab, $5);
+	if (address == -1) {
+		char error[100];
+		sprintf(error, "Erro semântico: Variável '%s' não declarada", $5);
+		yyerror(error);
+	}
+	address = word_offset * position;
+
+	// Escreve o header com os valores de comparação
+	writeWhileHeader(yyout, loopCounter, address, $6);
+
+	char endLoopLabel[20];
+	sprintf(endLoopLabel, "endloop_%d", loopCounter);
+	writeWhileCondition(yyout, $4, -1, 0, endLoopLabel);
+
+} form CLOSE {
+	writeWhileFooter(yyout, loopCounter++);
 }
 ;
 
