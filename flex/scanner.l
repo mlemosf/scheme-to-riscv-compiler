@@ -26,7 +26,7 @@ COMMENT ;.*
 /* Palavras chave */
 SET "set"
 OPERATOR [\+|\-|\*|\/]
-COMPARISON [>|<|>=|<=]
+COMPARISON ">"|"<"|">="|"<="|"eq"|"neq"
 
 /* Regras */
 %%
@@ -36,6 +36,7 @@ display {return DISPLAY;}
 while {return WHILE;}
 \( {return OPEN;}
 \) {return CLOSE;}
+{COMPARISON} {yylval.sval = (char*)strdup(yytext); return COMPARISON;}
 
 {BRANCO}+ {;}
 {INT} {yylval.ival = atoi(yytext); return INT;}
@@ -45,7 +46,6 @@ while {return WHILE;}
 
 {STRING} {printf("<string>");}
 {OPERATOR} {yylval.cval = (char)yytext[0]; return OPERATOR;}
-{COMPARISON} {yylval.sval = (char*)strdup(yytext); return COMPARISON;}
 {COMMENT} {printf("<comment>");}
 
 \n { linenum++; }

@@ -186,6 +186,26 @@ void writeWhileCondition(FILE* stream, char* operator, int address, int value, c
 		sprintf(exp, "bge %s, %s, %s", t3, t2, label);
 		writeExp(stream, exp);
 	}
+	else if (!strcmp(operator, ">")) {
+		sprintf(exp, "ble %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "<=")) {
+		sprintf(exp, "bgt %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, ">=")) {
+		sprintf(exp, "blt %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "eq")) {
+		sprintf(exp, "bne %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "neq")) {
+		sprintf(exp, "beq %s, %s, %s", t3, t2, label);
+		writeExp(stream, exp);
+	}
 }
 
 void writeWhileFooter(FILE* stream, int counter) {
