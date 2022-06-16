@@ -38,13 +38,13 @@ Symbol* symtab = NULL;
 
 /* Tokens */
 %token <ival> INT
-%token <sval> ID COMPARISON
+%token <sval> ID COMPARISON CHAR
 %token <cval> OPERATOR
 %token <vval> DEFINE DISPLAY OPEN CLOSE WHILE 
 
 // Expressões tipadas
 %type <ival> int
-%type <sval> variable operation
+%type <sval> variable operation char
 
 /* Regras */
 %%
@@ -147,6 +147,9 @@ operation: OPEN OPERATOR int int CLOSE {
 display: OPEN DISPLAY int CLOSE {
 	printInt(yyout, $3);
 }
+| OPEN DISPLAY char CLOSE {
+	printChar(yyout, $3);
+}
 | OPEN DISPLAY variable CLOSE {
 	// Busca a variável na tabela de símbolos
 	int position = searchSymtab(symtab, (char*) $3);
@@ -201,6 +204,8 @@ constant: int {;}
 
 int: INT {$$ = $1;}
 ;
+
+char: CHAR {$$ = $1;}
 
 %%
 

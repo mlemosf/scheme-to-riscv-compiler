@@ -36,6 +36,14 @@ void printInt(FILE* stream, int value) {
 	writeExp(stream, "ecall");
 }
 
+void printChar(FILE* stream, char* value) {
+	char exp[20];
+	sprintf(exp, "li a0, %s", value);
+	writeExp(stream, "li a7, 11");
+	writeExp(stream, exp);
+	writeExp(stream, "ecall");
+}
+
 void storeVariable(FILE* stream, int address) {
 	char exp[20];
 	sprintf(exp, "sw %s, %d(%s)", t3, address, gp);

@@ -13,11 +13,14 @@ Autor: mlemosf
 	extern FILE *yyin;
 %}
 
-/* Estruturas */
+/* Tipos primitivos */
 DIGIT [0-9]
 INT [-]*{DIGIT}+
 REAL [-]*{DIGIT}+"."{DIGIT}+
 BOOL "t"|"nil"
+CHAR [\\]*[a-zA-Z]
+
+/* Estruturas */
 ID [a-zA-Z]+[a-zA-Z0-9]*
 STRING "'"[a-zA-Z]*"'"
 BRANCO [ \t]
@@ -42,11 +45,12 @@ while {return WHILE;}
 {INT} {yylval.ival = atoi(yytext); return INT;}
 {REAL} {printf("<real>");}
 {BOOL} {printf("<bool>");}
+"'"{CHAR}"'" {yylval.sval = (char*)strdup(yytext); return CHAR;}
 {ID} {yylval.sval = (char*)strdup(yytext); return ID;}
 
 {STRING} {printf("<string>");}
 {OPERATOR} {yylval.cval = (char)yytext[0]; return OPERATOR;}
-{COMMENT} {printf("<comment>");}
+{COMMENT} {;}
 
 \n { linenum++; }
 

@@ -20,7 +20,7 @@ void writeHeader(FILE* stream);
 void storeInt(FILE* stream, int value, int position);
 void loadInt(FILE* stream, int position);
 void printInt(FILE* stream, int value);
-void printChar(FILE* stream, char value);
+void printChar(FILE* stream, char* value);
 void storeVariable(FILE* stream, int address);
 
 /* Funçoes compostas */
