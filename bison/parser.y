@@ -41,7 +41,7 @@ Symbol* symtab = NULL;
 %token <ival> INT
 %token <sval> ID COMPARISON CHAR
 %token <cval> OPERATOR
-%token <vval> DEFINE DISPLAY OPEN CLOSE WHILE 
+%token <vval> DEFINE SETQ DISPLAY OPEN CLOSE WHILE 
 
 // Expressões tipadas
 %type <ival> int
@@ -63,6 +63,7 @@ form: %empty
 expression: constant
 | operation
 | definition
+| set
 | display
 | loop {;}
 ;
@@ -100,6 +101,32 @@ definition: OPEN DEFINE variable int CLOSE {
 }
 ;
 
+
+set: OPEN SETQ variable int CLOSE {
+	int position;
+	int address;
+
+	//  Busca elemento na tabela de símbolos e gera erro se não tiver sido previamente definida
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+	address = word_offset * position;
+	storeInt(yyout, $4, address);
+}
+| OPEN SETQ variable operation CLOSE {
+	int position;
+	int address;
+
+	//  Busca elemento na tabela de símbolos e gera erro se não tiver sido previamente definida
+	position = searchSymtab(symtab, (char*)$3);
+	if (position == -1) {
+		yyerror("Erro semântico: Variável não declarada\n");
+	}
+	address = word_offset * position;
+	storeVariable(yyout, address);
+}
+;
 operation: OPEN OPERATOR int int CLOSE {
 	// Verifica o operador e gera o código correspondente
 	intArithmeticOperation(yyout, $2, $3, $4);

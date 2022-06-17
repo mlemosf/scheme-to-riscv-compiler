@@ -27,7 +27,6 @@ BRANCO [ \t]
 COMMENT ;.*
 
 /* Palavras chave */
-SET "set"
 OPERATOR [\+|\-|\*|\/]
 COMPARISON ">"|"<"|">="|"<="|"eq"|"neq"
 
@@ -35,6 +34,7 @@ COMPARISON ">"|"<"|">="|"<="|"eq"|"neq"
 %%
 
 define {return DEFINE;}
+setq {return SETQ;}
 display {return DISPLAY;}
 while {return WHILE;}
 \( {return OPEN;}
