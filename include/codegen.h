@@ -32,6 +32,6 @@ void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, 
 /* Loops */
 //void writeWhileHeader(FILE* stream, int counter);
 void writeWhileHeader(FILE* stream, int counter, int cmp1, int cmp2);
-void writeWhileCondition(FILE* stream, char* operator, int address, int value, char* label);
+void writeWhileCondition(FILE* stream, char* operator, int address, char* label);
 void writeWhileFooter(FILE* stream, int counter);
 #endif

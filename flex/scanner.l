@@ -18,7 +18,7 @@ DIGIT [0-9]
 INT [-]*{DIGIT}+
 REAL [-]*{DIGIT}+"."{DIGIT}+
 BOOL "t"|"nil"
-CHAR [\\]*[a-zA-Z]
+CHAR [\\]*[ a-zA-Z]
 
 /* Estruturas */
 ID [a-zA-Z]+[a-zA-Z0-9]*

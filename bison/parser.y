@@ -19,7 +19,8 @@ extern int yyparse();
 extern FILE *yyin;
 extern FILE *yyout;
 int yydebug = YYDEBUG;
-int loopCounter = 0;
+int loopHeaderCounter = 0;
+int loopFooterCounter = 0;
 
 void yyerror(char* s);
 
@@ -185,14 +186,19 @@ loop: OPEN WHILE OPEN COMPARISON variable int CLOSE {
 	address = word_offset * position;
 
 	// Escreve o header com os valores de comparação
-	writeWhileHeader(yyout, loopCounter, address, $6);
+	writeWhileHeader(yyout, loopHeaderCounter, address, $6);
 
 	char endLoopLabel[20];
-	sprintf(endLoopLabel, "endloop_%d", loopCounter);
-	writeWhileCondition(yyout, $4, -1, 0, endLoopLabel);
+	sprintf(endLoopLabel, "endloop_%d", loopHeaderCounter);
+	writeWhileCondition(yyout, $4, address, endLoopLabel);
+
+	// Aumenta o nível de aninhamento do loop
+	loopFooterCounter = loopHeaderCounter;
+	loopHeaderCounter++;
 
 } form CLOSE {
-	writeWhileFooter(yyout, loopCounter++);
+	// Escreve o fim do loop, reduzindo o nível de aninhamento
+	writeWhileFooter(yyout, loopFooterCounter--);
 }
 ;
 

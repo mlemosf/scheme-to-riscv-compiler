@@ -188,7 +188,7 @@ void writeWhileHeader(FILE* stream, int counter, int cmp1, int cmp2) {
 	writeLabel(stream, exp);
 }
 
-void writeWhileCondition(FILE* stream, char* operator, int address, int value, char* label) {
+void writeWhileCondition(FILE* stream, char* operator, int address, char* label) {
 	char exp[20];
 	if (!strcmp(operator, "<")) {
 		sprintf(exp, "bge %s, %s, %s", t3, t2, label);
