@@ -22,6 +22,8 @@ int yydebug = YYDEBUG;
 int loopHeaderCounter = 0;
 int loopFooterCounter = 0;
 
+int ifHeaderCounter = 0;
+
 void yyerror(char* s);
 
 /* Tabela de símbolos */
@@ -41,7 +43,7 @@ Symbol* symtab = NULL;
 %token <ival> INT
 %token <sval> ID COMPARISON CHAR
 %token <cval> OPERATOR
-%token <vval> DEFINE SETQ DISPLAY OPEN CLOSE WHILE 
+%token <vval> DEFINE SETQ DISPLAY OPEN CLOSE WHILE IF
 
 // Expressões tipadas
 %type <ival> int
@@ -65,7 +67,8 @@ expression: constant
 | definition
 | set
 | display
-| loop {;}
+| loop
+| if {;}
 ;
 
 
@@ -205,7 +208,7 @@ loop: OPEN WHILE OPEN COMPARISON variable int CLOSE {
 
 	// Carrega a variável da memória
 	position = searchSymtab(symtab, $5);
-	if (address == -1) {
+	if (position == -1) {
 		char error[100];
 		sprintf(error, "Erro semântico: Variável '%s' não declarada", $5);
 		yyerror(error);
@@ -226,6 +229,44 @@ loop: OPEN WHILE OPEN COMPARISON variable int CLOSE {
 } form CLOSE {
 	// Escreve o fim do loop, reduzindo o nível de aninhamento
 	writeWhileFooter(yyout, loopFooterCounter--);
+}
+;
+
+
+// Condicionais
+if: OPEN IF OPEN COMPARISON variable int CLOSE {
+	int position, address;
+
+	// Busca a variável
+	position = searchSymtab(symtab, $5);
+	if (position == -1) {
+		char error[100];
+		sprintf(error, "Erro semântico: Variável '%s' não declarada", $5);
+		yyerror(error);
+	}
+	address = word_offset * position;
+
+	// Escreve o salto condicional
+	writeIfConditionInt(yyout, $4, ifHeaderCounter, address, $6);
+
+
+} expression {
+	char endLabel[20];
+
+	// Escreve o salto para a label de encerramento
+	sprintf(endLabel, "jal end_if_%d", ifHeaderCounter);
+	writeExp(yyout, endLabel);
+
+	char label[20];
+	sprintf(label, "if_%d", ifHeaderCounter);
+	writeLabel(yyout,label);	
+
+} expression CLOSE {
+
+	char endLabel[20];
+	sprintf(endLabel, "end_if_%d", ifHeaderCounter);
+	writeLabel(yyout, endLabel);	
+	ifHeaderCounter++;
 }
 ;
 

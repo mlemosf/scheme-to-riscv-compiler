@@ -226,3 +226,46 @@ void writeWhileFooter(FILE* stream, int counter) {
 	sprintf(exp, "endloop_%d", counter);
 	writeLabel(stream, exp);
 }
+
+/* === Condicionais === */ 
+
+void writeIfConditionInt(FILE* stream, char* operator, int counter, int address, int value) {
+	char exp[20], label[20];
+
+	// Define o valor da label
+	sprintf(label, "if_%d", counter);
+
+	// Carrega a variável em t3
+	sprintf(exp, "lw %s, %d(%s)", t3, address, gp);
+	writeExp(stream, exp);
+
+	// Carrega inteiro em t1
+	sprintf(exp, "li, %s, %d", t4, value);
+	writeExp(stream, exp);
+
+	// Realiza o salto condicional baseado no operador
+	if (!strcmp(operator, "<")) {
+		sprintf(exp, "bge %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, ">")) {
+		sprintf(exp, "ble %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "<=")) {
+		sprintf(exp, "bgt %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, ">=")) {
+		sprintf(exp, "blt %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "eq")) {
+		sprintf(exp, "bne %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+	else if (!strcmp(operator, "neq")) {
+		sprintf(exp, "beq %s, %s, %s", t3, t4, label);
+		writeExp(stream, exp);
+	}
+}

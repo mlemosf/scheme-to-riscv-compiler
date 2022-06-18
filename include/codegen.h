@@ -34,4 +34,7 @@ void variableVariableArithmeticOperation(FILE *stream, char operator, int arg1, 
 void writeWhileHeader(FILE* stream, int counter, int cmp1, int cmp2);
 void writeWhileCondition(FILE* stream, char* operator, int address, char* label);
 void writeWhileFooter(FILE* stream, int counter);
+
+/* Condicionais */
+void writeIfConditionInt(FILE* stream, char* operator, int counter, int address, int value);
 #endif

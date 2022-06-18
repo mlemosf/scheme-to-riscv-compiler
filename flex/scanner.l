@@ -36,6 +36,7 @@ COMPARISON ">"|"<"|">="|"<="|"eq"|"neq"
 define {return DEFINE;}
 setq {return SETQ;}
 display {return DISPLAY;}
+if {return IF;}
 while {return WHILE;}
 \( {return OPEN;}
 \) {return CLOSE;}
